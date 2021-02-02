@@ -1,7 +1,7 @@
 <template>
   <div class="calc">
     <div @click="setBuffer(getBuffer())" class="display">
-      {{ display.join('') }}
+      {{ display.join('') || 'ERROR' }}
     </div>
     <div @click="addOpp('percent')" class="btn">%</div>
     <div @click="clearEntry" class="btn">CE</div>
@@ -27,7 +27,7 @@
     <div @click="addOpp('add')" class="btn">&#43;</div>
     <div @click="num(0)" class="btn num" id="zero">0</div>
     <div @click="addOpp('dot')" class="btn num">.</div>
-    <div @click="result" class="btn">&crarr;</div>
+    <div @click="result()" class="btn">&crarr;</div>
   </div>
 </template>
 
@@ -51,22 +51,52 @@ export default {
       console.log(num);
       let b = String(num).split('');
       this.buffer = b.map((num) => {
-        if (isNaN(num)) {
-          return '.';
-        } else {
+        if ((/[^.\D]/).test(num)) {
           return parseInt(num, 10);
+        } else if((/\./).test(num)) {
+          console.log('dot');
+          return;
+        } else {
+          return num;
         }
       });
+      console.log(`${this.buffer}`);
       this.redisplay();
-      console.log(this.buffer);
     },
     getResult() {
       return;
     },
+    clear() {
+      this.ans = 0; //add prev result here;
+      this.display = [0];
+      this.buffer = [0];
+    },
+    clearEntry() {
+      this.display[this.display.length - 1] = 0;
+      this.buffer = [0];
+    },
+    num(number) {
+      if (this.buffer[0] == 0 && this.buffer.length == 1)
+        this.buffer[0] = number;
+      else this.buffer.push(number);
+      this.redisplay();
+    },
+    del() {
+      if (this.buffer.length > 1) this.buffer.pop();
+      else if (this.buffer[0] != 0) this.setBuffer(0);
+      else if ((/\./).test(this.buffer[this.buffer.length - 1])) {
+        this.buffer.pop;
+        this.buffer.pop;
+      } else if (this.display[0] == 0) return;
+      else {
+        this.display.pop();
+        this.display.pop();
+        this.setBuffer(this.display[this.display.length - 1]);
+      }
+      this.redisplay();
+    },
     addOpp(opp) {
-      if (this.display[this.display.length - 1] == '') {
-        console.log('is NaN');
-      } else
+      if (this.display[this.display.length - 1] != '') {
         switch (opp) {
           case 'percent':
             this.display.push('%');
@@ -110,39 +140,53 @@ export default {
           case 'oneOver':
             this.setBuffer(1 / this.getBuffer());
             break;
+          }
         }
-    },
-    clear() {
-      this.ans = 0; //add prev result here;
-      this.display = [0];
-    },
-    clearEntry() {
-      this.display[this.display.length - 1] = 0;
-      this.buffer = [0];
-    },
-    num(number) {
-      if (this.buffer[0] == 0) this.buffer[0] = number;
-      else this.buffer.push(number);
-      this.redisplay();
-    },
-    del() {
-      if (this.buffer.length > 1) this.buffer.pop();
-      else if (this.buffer[0] != 0) this.setBuffer(0);
-      else if (this.buffer[this.buffer.length - 1] == ".") {
-        console.log('.');
-        this.buffer.pop;
-        this.buffer.pop;
+      },
+      result() {
+        let removeIndex = (arr, iArr) => {
+          let res = [];
+          for(let i=0; i<arr.length; i++) {
+            if(!iArr.includes(i)) res.push(arr[i]);
+          }
+          return res;
+        }
+        //PEMDAS math here
+        let check = [/\(/, /\)/, /\^/, /√/, /X/, /\//, /\+/, /-/] 
+        for (let x=0;x<check.length;x++) {
+          for (let i=0;i<this.display.length;i++) {
+            if (check[x].test(this.display[i])) {
+              switch (x) {
+                case 0:
+                case 1:
+                  break;
+                case 2:
+                  this.display[i-1] = Math.pow(this.display[i-1], this.display[i+1]);
+                  break;
+                case 3:
+                  this.display[i-1] = Math.pow(this.display[i-1], 1/this.display+1);
+                  break;
+                case 4:
+                  this.display[i-1] = this.display[i-1] * this.display[i+1];
+                  break;
+                case 5:
+                  this.display[i-1] = this.display[i-1] / this.display[i+1];
+                  break;
+                case 6:
+                  this.display[i-1] = this.display[i-1] + this.display[i+1];
+                  break;
+                case 7:
+                  this.display[i-1] = this.display[i-1] - this.display[i+1];
+                  break;
+              }
+              this.display = removeIndex(this.display, [i,i+1]);
+            }
+          }
+        }
+        this.setBuffer(this.display[this.display.length-1]);
       }
-      else if (this.display[0] == 0) return;
-      else {
-        this.display.pop();
-        this.display.pop();
-        this.setBuffer(this.display[this.display.length - 1]);
-      }
-      this.redisplay();
-    },
-  },
-};
+    }
+  }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -159,6 +203,7 @@ export default {
   grid-column: 1/5;
   background-color: black;
   color: white;
+  overflow-x: auto;
   border: 0.2em solid silver;
   font-size: 5vw;
 }
