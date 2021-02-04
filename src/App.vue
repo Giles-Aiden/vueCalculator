@@ -1,5 +1,7 @@
 <template>
+  <h1>Scientific Calculator</h1>
   <Calc />
+  <h5>Created by Aiden Giles 2021</h5>
 </template>
 
 <script>

@@ -1,45 +1,44 @@
-//<div @click="addOpp()" class="btn"></div>
 <template>
   <div class="calc">
     <div @click="setBuffer(getBuffer())" class="display">
-      {{ callDisplay() || "ERROR" }}
+      {{ callDisplay() || 'ERROR' }}
     </div>
-    <div @click="addOpp('percent')" class="btn">%</div>
-    <div @click="clearEntry" class="btn">CE</div>
-    <div @click="clear" class="btn">C</div>
-    <div @click="addOpp('pi')" class="btn">π</div>
-    <div @click="del" class="btn">&larr;</div>
-    <div @click="addOpp('oneOver')" class="btn">
+    <button @click="addOpp('percent')" class="btn">%</button>
+    <button @click="clearEntry" class="btn">CE</button>
+    <button @click="clear" class="btn">C</button>
+    <button @click="addOpp('pi')" class="btn">π</button>
+    <button @click="del" class="btn">&larr;</button>
+    <button @click="addOpp('oneOver')" class="btn">
       <sup>1</sup>&frasl;<sub>x</sub>
-    </div>
-    <div @click="addOpp('exp')" class="btn">x<sup>y</sup></div>
-    <div @click="addOpp('root')" class="btn">&radic;</div>
-    <div @click="addOpp('abs')" class="btn">|x|</div>
-    <div @click="addOpp('div')" class="btn">&divide;</div>
-    <div @click="addOpp('openP')" class="btn">(</div>
-    <div @click="addOpp('closeP')" class="btn">)</div>
-    <div @click="addOpp('n!')" class="btn"><em>n!</em></div>
-    <div @click="addOpp('log')" class="btn">log</div>
-    <div @click="addOpp('ln')" class="btn">ln</div>
-    <div @click="num(7)" class="btn num">7</div>
-    <div @click="num(8)" class="btn num">8</div>
-    <div @click="num(9)" class="btn num">9</div>
-    <div @click="addOpp('sin')" class="btn">sin()</div>
-    <div @click="addOpp('mult')" class="btn">&times;</div>
-    <div @click="num(4)" class="btn num">4</div>
-    <div @click="num(5)" class="btn num">5</div>
-    <div @click="num(6)" class="btn num">6</div>
-    <div @click="addOpp('cos')" class="btn">cos()</div>
-    <div @click="addOpp('sub')" class="btn">&minus;</div>
-    <div @click="num(1)" class="btn num">1</div>
-    <div @click="num(2)" class="btn num">2</div>
-    <div @click="num(3)" class="btn num">3</div>
-    <div @click="addOpp('tas')" class="btn">tas()</div>
-    <div @click="addOpp('add')" class="btn">&#43;</div>
-    <div @click="num(0)" class="btn num" id="zero">0</div>
-    <div @click="addOpp('dot')" class="btn num">.</div>
-    <div @click="addOpp('mod')" class="btn">Mod</div>
-    <div @click="result()" class="btn">&crarr;</div>
+    </button>
+    <button @click="addOpp('exp')" class="btn">x<sup>y</sup></button>
+    <button @click="addOpp('root')" class="btn">&radic;</button>
+    <button @click="addOpp('abs')" class="btn">|x|</button>
+    <button @click="addOpp('button')" class="btn">&divide;</button>
+    <button @click="addOpp('openP-')" class="btn">(</button>
+    <button @click="addOpp('closeP-')" class="btn">)</button>
+    <button @click="addOpp('n!')" class="btn"><em>n!</em></button>
+    <button @click="addOpp('log')" class="btn">log</button>
+    <button @click="addOpp('ln')" class="btn">ln</button>
+    <button @click="num(7)" class="btn num">7</button>
+    <button @click="num(8)" class="btn num">8</button>
+    <button @click="num(9)" class="btn num">9</button>
+    <button @click="addOpp('sin')" class="btn">sin</button>
+    <button @click="addOpp('mult')" class="btn">&times;</button>
+    <button @click="num(4)" class="btn num">4</button>
+    <button @click="num(5)" class="btn num">5</button>
+    <button @click="num(6)" class="btn num">6</button>
+    <button @click="addOpp('cos')" class="btn">cos</button>
+    <button @click="addOpp('sub')" class="btn">&minus;</button>
+    <button @click="num(1)" class="btn num">1</button>
+    <button @click="num(2)" class="btn num">2</button>
+    <button @click="num(3)" class="btn num">3</button>
+    <button @click="addOpp('tan')" class="btn">tan</button>
+    <button @click="addOpp('add')" class="btn">&#43;</button>
+    <button @click="num(0)" class="btn num" id="zero">0</button>
+    <button @click="addOpp('dot')" class="btn num">.</button>
+    <button @click="addOpp('mod')" class="btn">％mod</button>
+    <button @click="displayResult" class="btn">&crarr;</button>
   </div>
 </template>
 
@@ -57,7 +56,7 @@ export default {
   },
   methods: {
     callDisplay() {
-      return this.display.join("");
+      return this.display.join('');
     },
     //sets buffer to last display item
     //useful when deleting past current buffer
@@ -66,23 +65,20 @@ export default {
     },
     //returns current buffer
     getBuffer() {
-      return parseFloat(this.buffer.join(""), 10);
+      return parseFloat(this.buffer.join(''), 10);
     },
     //sets buffer with decimals and numbers
     setBuffer(num) {
-      console.log(num);
-      let b = String(num).split("");
+      let b = String(num).split('');
       this.buffer = b.map((num) => {
         if (/[^.\D]/.test(num)) {
           return parseInt(num, 10);
         } else if (/\./.test(num)) {
-          console.log("dot");
-          return ".";
+          return '.';
         } else {
           return num;
         }
       });
-      console.log(`${this.buffer}`);
       this.redisplay();
     },
     //resets calc
@@ -95,6 +91,10 @@ export default {
     clearEntry() {
       this.display[this.display.length - 1] = 0;
       this.buffer = [0];
+    },
+    displayError() {
+      this.display = [undefined];
+      this.setBuffer(undefined);
     },
     //adds number to buffer
     num(number) {
@@ -109,7 +109,7 @@ export default {
       else if (this.buffer[0] != 0 && this.buffer.length == 1)
         this.setBuffer(0);
       else if (/\./.test(this.buffer[this.buffer.length - 1])) {
-        this.buffer.pop;
+        this.buffer.pop();
         this.buffer.pop;
       } else if (this.display[0] == 0) return;
       else {
@@ -163,13 +163,18 @@ export default {
               this.buffer = [];
             }
             break;
+          case 'mod':
+            this.display.push('％');
+            this.display.push('');
+            this.buffer = [];
+            break;
           case 'openP':
-            this.buffer.push('(');
+            this.display.push('(');
             this.display.push('');
             this.buffer = [];
             break;
           case 'closeP':
-            this.buffer.push(')');
+            this.display.push(')');
             this.display.push('');
             this.buffer = [];
             break;
@@ -178,7 +183,7 @@ export default {
             break;
           case 'n!': {
             let result = this.getBuffer();
-            for (let i=this.getBuffer()-1; i>0; i--) {
+            for (let i = this.getBuffer() - 1; i > 0; i--) {
               result *= i;
             }
             this.setBuffer(result);
@@ -187,17 +192,36 @@ export default {
           case 'abs':
             this.setBuffer(Math.abs(this.getBuffer()));
             break;
+          case 'log':
+            this.setBuffer(Math.log10(this.getBuffer()));
+            break;
+          case 'ln':
+            this.setBuffer(Math.log(this.getBuffer()));
+            break;
           case 'sin':
+            this.setBuffer(Math.sin(this.getBuffer()));
+            break;
           case 'cos':
-          case 'tas':
+            this.setBuffer(Math.cos(this.getBuffer()));
+            break;
+          case 'tan':
+            this.setBuffer(Math.tan(this.getBuffer()));
+            break;
           default:
-            console.log('error');
+            console.error('Invalid Opp Type');
             break;
         }
       }
     },
+    displayResult() {
+      this.buffer = this.result(this.display);
+      this.display = [this.getBuffer()];
+      this.redisplay();
+    },
     //sets display, ans, and computes answer
-    result() {
+    result(inputArr) {
+      console.log('input arr ' + inputArr);
+      if (inputArr.length == 1) return inputArr;
       let removeIndex = (arr, iArr) => {
         let res = [];
         for (let i = 0; i < arr.length; i++) {
@@ -206,50 +230,64 @@ export default {
         return res;
       };
       //PEMDAS math here
-      let check = [/\(/, /\)/, /\^/, /√/, /^(x)/, /%/, /\//, /\+/, /-/];
+      let check = [/\(/, /\)/, /\^/, /√/, /^(x)/, /%/, /\//, /％/, /\+/, /-/];
       for (let x = 0; x < check.length; x++) {
-        for (let i = 0; i < this.display.length; i++) {
-          if (check[x].test(this.display[i])) {
+        for (let i = 0; i < inputArr.length; i++) {
+          if (check[x].test(inputArr[i])) {
             //if input is not a number do below in accordance with PEMDAS
             //compute prevNum and nextNum by opperator
+            //i = current opp  x = current regex check
             switch (x) {
               case 0:
+                if (check[1].test(inputArr.slice(x + 2))) {
+                  let b = inputArr.slice(
+                    x + 2,
+                    inputArr.findIndex((ele) => ele == ')')
+                  );
+                  let r = [];
+                  for (
+                    let y = x + 1;
+                    y < inputArr.findIndex((ele) => ele == ')') + 1;
+                    y++
+                  )
+                    r.push(y);
+                  if (b.length > 1) {
+                    inputArr[i - 1] *= this.result(b);
+                  } else inputArr[i - 1] *= b[0]; 
+                } else this.displayError();
+                break;
               case 1:
                 break;
               case 2:
-                this.display[i - 1] = Math.pow(
-                  this.display[i - 1],
-                  this.display[i + 1]
-                );
+                inputArr[i - 1] = Math.pow(inputArr[i - 1], inputArr[i + 1]);
                 break;
               case 3:
-                this.display[i - 1] = Math.pow(
-                  this.display[i - 1],
-                  1 / this.display + 1
-                );
+                inputArr[i - 1] = Math.pow(inputArr[i - 1], 1 / inputArr + 1);
                 break;
               case 4:
-                this.display[i - 1] = this.display[i - 1] * this.display[i + 1];
+                inputArr[i - 1] = inputArr[i - 1] * inputArr[i + 1];
                 break;
               case 5:
-                this.display[i - 1] =
-                  (this.display[i + 1] * this.display[i - 1]) / 100;
+                inputArr[i - 1] = (inputArr[i + 1] * inputArr[i - 1]) / 100;
                 break;
               case 6:
-                this.display[i - 1] = this.display[i - 1] / this.display[i + 1];
+                inputArr[i - 1] = inputArr[i - 1] / inputArr[i + 1];
                 break;
               case 7:
-                this.display[i - 1] = this.display[i - 1] + this.display[i + 1];
+                inputArr[i - 1] = inputArr[i - 1] % inputArr[i + 1];
                 break;
               case 8:
-                this.display[i - 1] = this.display[i - 1] - this.display[i + 1];
+                inputArr[i - 1] = inputArr[i - 1] + inputArr[i + 1];
+                break;
+              case 9:
+                inputArr[i - 1] = inputArr[i - 1] - inputArr[i + 1];
                 break;
             }
-            this.display = removeIndex(this.display, [i, i + 1]);
+            inputArr = removeIndex(inputArr, [i, i + 1]);
           }
         }
       }
-      this.setBuffer(this.display[this.display.length - 1]);
+      return inputArr;
     },
   },
 };
@@ -277,6 +315,13 @@ export default {
   background-color: tan;
   border: 0.5em groove tan;
   font-size: 3vw;
+}
+.btn:hover {
+  background-color: beige;
+}
+.btn:active {
+  color: white;
+  background-color: silver;
 }
 .num {
   background-color: grey;
